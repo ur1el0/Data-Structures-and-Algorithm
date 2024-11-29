@@ -1,0 +1,131 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+// Struct to represent a Song
+struct Song {
+    string title;   // song title
+    string artist;  // song atrist
+    float duration; // song duration in minutes
+};
+
+// function to add a song to the playlist
+void addSong(vector<Song> &playlist) {
+    Song newSong;  // create a new Song object
+
+    // ask the user to input the song's title
+    cout << "Enter song title: ";
+    getline(cin, newSong.title); // use getline to allow spaces in the input
+
+    // ask the user to input the song's artist
+    cout << "Enter artist name: ";
+    getline(cin, newSong.artist); 
+
+    // ask the user to input the song's duration
+    cout << "Enter song duration (in minutes): ";
+    cin >> newSong.duration;
+    cin.ignore(); // ignore the newline character left in the input buffer
+
+    //add the new song to the playlist vector
+    playlist.push_back(newSong);
+
+    cout << "Song added successfully!\n";
+}
+
+// function to update an existing song in the playlist
+void updateSong(vector<Song> &playlist) {
+    int index;
+    
+    // ask the user which song to update
+    cout << "Enter the song number to update: ";
+    cin >> index; // user inputs the song number
+    cin.ignore();
+
+    // check if the index is valid
+    if (index <= 0 || index > playlist.size()) {
+        cout << "Invalid song number.\n";
+        return; // exit the function if the index is not valid or not available
+    }
+
+    // reference to the song that will be updated, using `index - 1` because vectors are 0-indexed
+    Song &songToUpdate = playlist[index - 1];
+
+    cout << "Enter new title (or press Enter to keep it the same): ";
+    string newTitle;
+    getline(cin, newTitle); // take new title
+    if (!newTitle.empty()) { // if the user entered something, update the title
+        songToUpdate.title = newTitle;
+    }
+
+    cout << "Enter new artist (or press Enter to keep it the same): ";
+    string newArtist;
+    getline(cin, newArtist); // take new artist name
+    if (!newArtist.empty()) { // If the user entered something, update the artist
+        songToUpdate.artist = newArtist;
+    }
+
+    cout << "Enter new duration (or press Enter to keep it the same): ";
+    string durationInput;
+    getline(cin, durationInput); // take duration as a string 
+    if (!durationInput.empty()) { // if the user entered something, update the duration
+        songToUpdate.duration = stof(durationInput); // convert string to float using stof(string to float)
+    }
+    cout << "Song updated successfully!\n";
+}
+
+// function to display the playlist
+void displayPlaylist(const vector<Song> &playlist) {
+    // check if the playlist is empty
+    if (playlist.empty()) {
+        cout << "Playlist is empty.\n";
+        return; // exit the function if there are no songs to display
+    }
+
+    // loop through each song in the playlist and display the details
+    for (size_t i = 0; i < playlist.size(); ++i) {
+        // display song number
+        cout << i + 1 << ". " << playlist[i].title << " by " << playlist[i].artist
+             << " (" << playlist[i].duration << " mins)\n";
+    }
+}
+// main function for the program
+int main() {
+    vector<Song> playlist;  // the playlist vector to hold songs
+    int choice; // menu choice of the user
+
+    // main menu loop
+    do {
+        // display the menu options
+        cout << "\n--- Playlist Menu ---\n";
+        cout << "1. Add Song\n";
+        cout << "2. Update Song\n";
+        cout << "3. Display Playlist\n";
+        cout << "4. Exit\n";
+        cout << "Enter your choice: ";
+        
+        cin >> choice;  // get the user's choice
+        cin.ignore();   // ignore any leftover newline characters
+
+        // use a switch statement for the choice of the user
+        switch (choice) {
+            case 1:
+                addSong(playlist);  // call addSong function to add a new song to the playlist
+                break;
+            case 2:
+                updateSong(playlist); // call updateSong function to update an existing son
+                break;
+            case 3:
+                displayPlaylist(playlist); // call displayPlaylist function to display the list of songs
+                break;
+            case 4:
+                cout << "Exiting the program...\n";// exit option
+                break;
+            default:
+                cout << "Invalid choice. Try again.\n";// if the user enters an invalid option
+        }
+    } while (choice != 4); // Continue the loop until the user chooses option 4 (Exit)
+
+    return 0;
+}
